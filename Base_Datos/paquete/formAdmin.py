@@ -1,8 +1,14 @@
-import gi
-import Base_Datos.inicio
-import Base_Datos.winbase
-import Base_Datos.baselog
 import sqlite3 as dbapi
+
+import paquete.baselog
+import paquete.form
+import paquete.inicio
+import paquete.winAdmin
+import paquete.winRecep
+import paquete.winbaseadmin
+import gi
+
+import paquete.winTrain
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -17,7 +23,7 @@ class FormularioGym(Gtk.Window):
         self.add(cajaGeneral)
 
         lbltitulo = Gtk.Label(xalign=0)
-        lbltitulo.set_markup("<b>Formulario De Inscripción</b>")
+        lbltitulo.set_markup("<b>ADMINISTRADOR</b>")
         cajaGeneral.add(lbltitulo)
 
         frameDatos = Gtk.Frame(label="Datos Cliente")
@@ -44,6 +50,12 @@ class FormularioGym(Gtk.Window):
         frameBorrar = Gtk.Frame(label="Borrar Cliente")
         cajaInvisibleV8 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         frameBorrar.add(cajaInvisibleV8)
+        frameAdmins = Gtk.Frame(label="Opciones Administrador")
+        cajaInvisibleV9 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        frameAdmins.add(cajaInvisibleV9)
+        frameAdmins1 = Gtk.Frame(label="Opciones Administrador")
+        cajaInvisibleV10 = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
+        frameAdmins1.add(cajaInvisibleV10)
 
         cajaInvisibleH1 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         cajaInvisibleH2 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
@@ -55,7 +67,8 @@ class FormularioGym(Gtk.Window):
         cajaInvisibleH8 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         cajaInvisibleH9 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
         cajaInvisibleH10 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
-
+        cajaInvisibleH11 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
+        cajaInvisibleH12 = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL)
 
         lblNombre = Gtk.Label(label="Nombre", xalign=0)
         self.txtNombre = Gtk.Entry()
@@ -127,6 +140,35 @@ class FormularioGym(Gtk.Window):
         btnConsdb.connect("clicked", self.on_btn_consult)
         self.Consdb = Gtk.Label(xalign=0)
 
+        btnConsAdmin = Gtk.Button(label="Consulta Admins")
+        btnConsAdmin.connect("clicked", self.on_btn_consultAdmins)
+        self.ConsAdmin = Gtk.Label(xalign=0)
+
+        btnConsTrainer = Gtk.Button(label="Consulta Trainers")
+        btnConsTrainer.connect("clicked", self.on_btn_consultTrainers)
+        self.ConsTrainer = Gtk.Label(xalign=0)
+
+        btnConsRecep = Gtk.Button(label="Consulta Recepcion")
+        btnConsRecep.connect("clicked", self.on_btn_consultRecepcion)
+        self.ConsRecep = Gtk.Label(xalign=0)
+
+        btnNewAdmin = Gtk.Button(label="Nuevo Admin")
+        btnNewAdmin.connect("clicked", self.on_btn_newAdmin)
+        self.NewAdmin = Gtk.Label(xalign=0)
+
+        btnNewTrain = Gtk.Button(label="Nuevo Trainer")
+        btnNewTrain.connect("clicked", self.on_btn_newTrain)
+        self.NewTrain = Gtk.Label(xalign=0)
+
+        btnNewRecep = Gtk.Button(label="Nuevo Recepcion")
+        btnNewRecep.connect("clicked", self.on_btn_newRecep)
+        self.NewRecep = Gtk.Label(xalign=0)
+
+        lblUser = Gtk.Label(label="User", xalign=0)
+        self.txtUser = Gtk.Entry()
+        lblPass = Gtk.Label(label="Password", xalign=0)
+        self.txtPass = Gtk.Entry()
+
 
         cajaInvisibleH1.pack_start(lblNombre, True, False, 0)
         cajaInvisibleH1.pack_start(self.txtNombre, True, False, 0)
@@ -160,6 +202,16 @@ class FormularioGym(Gtk.Window):
         cajaInvisibleH9.pack_start(self.txtConsUs, True, False, 0)
         cajaInvisibleH10.pack_start(btnDeleUs, True, False, 0)
         cajaInvisibleH10.pack_start(self.txtDeleUs, True, False, 0)
+        cajaInvisibleH11.pack_start(btnConsAdmin, True, False, 0)
+        cajaInvisibleH11.pack_start(btnConsRecep, True, False, 0)
+        cajaInvisibleH11.pack_start(btnConsTrainer, True, False, 0)
+        cajaInvisibleH12.pack_start(btnNewAdmin, True, False, 0)
+        cajaInvisibleH12.pack_start(btnNewRecep, True, False, 0)
+        cajaInvisibleH12.pack_start(btnNewTrain, True, False, 0)
+        cajaInvisibleH12.pack_start(lblUser, True, False, 0)
+        cajaInvisibleH12.pack_start(self.txtUser, True, False, 0)
+        cajaInvisibleH12.pack_start(lblPass, True, False, 0)
+        cajaInvisibleH12.pack_start(self.txtPass, True, False, 0)
 
 
         cajaInvisibleV1.add(cajaInvisibleH1)
@@ -172,6 +224,8 @@ class FormularioGym(Gtk.Window):
         cajaInvisibleV6.add(cajaInvisibleH8)
         cajaInvisibleV7.add(cajaInvisibleH9)
         cajaInvisibleV8.add(cajaInvisibleH10)
+        cajaInvisibleV9.add(cajaInvisibleH11)
+        cajaInvisibleV10.add(cajaInvisibleH12)
 
 
         cajaGeneral.add(frameDatos)
@@ -181,6 +235,8 @@ class FormularioGym(Gtk.Window):
         cajaGeneral.add(frameConsultar)
         cajaGeneral.add(frameBorrar)
         cajaGeneral.add(frameOpciones)
+        cajaGeneral.add(frameAdmins)
+        cajaGeneral.add(frameAdmins1)
 
 
         self.connect("delete-event", Gtk.main_quit)
@@ -224,28 +280,9 @@ class FormularioGym(Gtk.Window):
             print("Error en la base de datos")
 
     def on_btn_consult(self, boton):
-        Base_Datos.winbase.DataBaseRecep()
+        paquete.winbaseadmin.DataBaseAdmin()
         self.destroy()
-        base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/gym.db")
-        cursor = base.cursor()
-        cursor.execute("SELECT * FROM clientes")
-        print("Lista de Clientes")
-        print("---")
-        for i in cursor:
-            print("Nombre", i[0])
-            print("Apellidos=", i[1])
-            print("Telefono=", i[2])
-            print("CP=", i[3])
-            print("DNI=", i[4])
-            print("Direccion=", i[5])
-            print("Poblacion=", i[6])
-            print("Provincia=", i[7])
-            print("Deporte=", i[8])
-            print("Objetivos=", i[9])
-            print("Fisioterapeuta=", i[10])
-            print("Personal Trainer=", i[11])
-            print("Sauna=", i[12])
-            print("---")
+
 
     def on_btn_consulta(self, boton):
         base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/gym.db")
@@ -272,27 +309,71 @@ class FormularioGym(Gtk.Window):
             print("---")
 
     def on_btn_delete(self, boton):
-        base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/gym.db")
-        cursor = base.cursor()
-        reg=(self.txtDeleUs.get_text())
-        cursor.execute("DELETE FROM clientes WHERE dni='%s'" %reg)
-        self.txtDeleUs.set_text("")
-        print("Cliente borrado")
-        print("---")
-        base.commit()
-        cursor.close()
+        FormularioGym.on_btn_delete()
 
-    def updateClientes(self, boton, columna,contenido1,contenido):
-        base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/gym.db")
-        cursor = base.cursor()
-        cursor.execute("UPDATE clientes set "+columna+"='"+contenido+"'where DNI='"+contenido1+"'")
-        print("Cliente Actualizado")
-        base.commit()
-        cursor.close()
+    def on_btn_newAdmin(self, boton):
+        try:
+            base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/user.db")
+            cursor = base.cursor()
+            print("Cambios realizados con éxito")
+            reg=(self.txtUser.get_text(),
+                 self.txtPass.get_text())
+            cursor.execute('INSERT INTO gym VALUES (?,?)', reg)
+            base.commit()
+            cursor.close()
+            base.close()
+        except dbapi.OperationalError:
+            print("Error al conectar a la base (OperationalError): ")
+        except dbapi.DatabaseError:
+            print("Error en la base de datos")
+
+    def on_btn_newTrain(self, boton):
+        try:
+            base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/usertrainers.db")
+            cursor = base.cursor()
+            print("Cambios realizados con éxito")
+            reg=(self.txtUser.get_text(),
+                 self.txtPass.get_text())
+            cursor.execute('INSERT INTO gym VALUES (?,?)', reg)
+            base.commit()
+            cursor.close()
+            base.close()
+        except dbapi.OperationalError:
+            print("Error al conectar a la base (OperationalError): ")
+        except dbapi.DatabaseError:
+            print("Error en la base de datos")
+
+    def on_btn_newRecep(self, boton):
+        try:
+            base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/userrecep.db")
+            cursor = base.cursor()
+            print("Cambios realizados con éxito")
+            reg=(self.txtUser.get_text(),
+                 self.txtPass.get_text())
+            cursor.execute('INSERT INTO gym VALUES (?,?)', reg)
+            base.commit()
+            cursor.close()
+            base.close()
+        except dbapi.OperationalError:
+            print("Error al conectar a la base (OperationalError): ")
+        except dbapi.DatabaseError:
+            print("Error en la base de datos")
+
+    def on_btn_consultAdmins(self, boton):
+        paquete.winAdmin.DataBase()
+        self.destroy()
+
+    def on_btn_consultTrainers(self, boton):
+        paquete.winTrain.DataBase()
+        self.destroy()
+
+    def on_btn_consultRecepcion(self, boton):
+        paquete.winRecep.DataBase()
+        self.destroy()
 
     def on_btn_close(self, widget):
         self.destroy()
-        Base_Datos.inicio.VentanaInicio()
+        paquete.inicio.VentanaInicio()
 
     def on_btn_cdatabase(self, base):
         self.conectarBase(base)

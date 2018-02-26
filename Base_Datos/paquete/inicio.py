@@ -1,11 +1,14 @@
-import gi
-import Base_Datos.log
-import Base_Datos.logTrainer
-import Base_Datos.logRecep
 import sys
 
+import paquete.log
+import paquete.logTrainer
+import gi
+
+import paquete.logRecep
+
 gi.require_version('Gtk','3.0')
-from gi.repository import Gtk, Gio
+from gi.repository import Gtk
+
 
 class VentanaInicio(Gtk.Window):
     def __init__(self):
@@ -48,15 +51,15 @@ class VentanaInicio(Gtk.Window):
         self.show_all()
 
     def on_btn_Admin(self, boton):
-        Base_Datos.log.VentanaLogin()
+        paquete.log.VentanaLogin()
         self.destroy()
 
     def on_btn_Trainer(self, boton):
-        Base_Datos.logTrainer.VentanaLogin()
+        paquete.logTrainer.VentanaLogin()
         self.destroy()
 
     def on_btn_Recep(self, boton):
-        Base_Datos.logRecep.VentanaLogin()
+        paquete.logRecep.VentanaLogin()
         self.destroy()
 
     def on_btn_Exit(self, boton):

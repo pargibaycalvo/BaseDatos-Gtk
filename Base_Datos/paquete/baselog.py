@@ -1,5 +1,6 @@
 import gi
-import Base_Datos.winbase2
+
+import paquete.winbase2
 
 gi.require_version('Gtk','3.0')
 from gi.repository import Gtk, Gio
@@ -54,7 +55,7 @@ class DataBase(Gtk.Window):
         password = self.txtPass.get_text()
         if (password == "abc123."):
             self.lblCorInc.set_text(str("Login Correcto"))
-            Base_Datos.winbase2.DataBaseTrainer()
+            paquete.winbase2.DataBaseTrainer()
             self.destroy()
         else:
             self.lblCorInc.set_text(str("Credenciales incorrectas"))

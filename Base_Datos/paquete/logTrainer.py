@@ -1,9 +1,10 @@
-import gi
-import Base_Datos.formAdmin
-import Base_Datos.formtrainer
-import Base_Datos.inicio
 import sqlite3 as dbapi
 
+import paquete.form
+import paquete.inicio
+import gi
+
+import paquete.formtrainer
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -18,7 +19,7 @@ class VentanaLogin(Gtk.Window):
         self.add(cajaGeneral)
 
         lbltitulo = Gtk.Label()
-        lbltitulo.set_markup("<b>Sesión Administradores</b>")
+        lbltitulo.set_markup("<b>Sesion Entrenadores</b>")
         cajaGeneral.add(lbltitulo)
 
         frameLogin = Gtk.Frame()
@@ -36,7 +37,6 @@ class VentanaLogin(Gtk.Window):
         btnReturn = Gtk.Button(label="Return")
         btnReturn.connect("clicked", self.on_btn_Return)
 
-
         cajaInvisibleV.pack_start(lblNombre, True, False, 0)
         cajaInvisibleV.pack_start(self.txtNombre, True, False, 0)
         cajaInvisibleV.pack_start(lblPass, True, False, 0)
@@ -45,30 +45,28 @@ class VentanaLogin(Gtk.Window):
         cajaInvisibleV.pack_start(btnReturn, True, False, 0)
         cajaInvisibleV.pack_start(self.lblCorInc, True, False, 0)
 
-
         cajaGeneral.add(frameLogin)
 
         self.connect("delete-event", Gtk.main_quit)
         self.show_all()
 
     def on_btn_Clicked(self, widget):
-        base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/user.db")
+        base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/usertrainers.db")
         cursor = base.cursor()
         usr = (self.txtNombre.get_text())
         pas = (self.txtPass.get_text())
         cursor.execute('SELECT * from gym WHERE user=? AND pass=?',(usr, pas))
 
-        if (cursor.fetchone() is not None):
+        if (cursor.fetchone()is not None):
             self.lblCorInc.set_text(str("Login Correcto"))
-            Base_Datos.formAdmin.FormularioGym()
+            paquete.formtrainer.FichasGym()
             self.destroy()
         else:
             self.lblCorInc.set_text(str("Credenciales incorrectas"))
 
     def on_btn_Return(self, boton):
-        Base_Datos.inicio.VentanaInicio()
+        paquete.inicio.VentanaInicio()
         self.destroy()
-
 
 
 if __name__ == "__main__":

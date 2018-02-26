@@ -1,6 +1,8 @@
-import gi
 import sqlite3 as dbapi
-import Base_Datos.formAdmin
+
+import gi
+
+import paquete.formAdmin
 
 gi.require_version('Gtk','3.0')
 from gi.repository import Gtk
@@ -43,7 +45,7 @@ class DataBase(Gtk.Window):
         self.show_all()
 
     def on_btn_return(self, boton):
-        Base_Datos.formAdmin.FormularioGym()
+        paquete.formAdmin.FormularioGym()
         self.destroy()
 
 

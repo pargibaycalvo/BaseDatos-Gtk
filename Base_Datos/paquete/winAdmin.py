@@ -1,28 +1,25 @@
-import gi
 import sqlite3 as dbapi
-import Base_Datos.formtrainer
-from Base_Datos import formAdmin
+
+import gi
+
+import paquete.formAdmin
 
 gi.require_version('Gtk','3.0')
 from gi.repository import Gtk
 
-class DataBaseRecep(Gtk.Window):
+class DataBase(Gtk.Window):
     def __init__(self):
-        Gtk.Window.__init__(self,title="Base de Datos Clientes-GYM")
-        self.set_default_size(250,150)
+        Gtk.Window.__init__(self,title="Base de Datos Administradores-GYM")
+        self.set_default_size(400,150)
         self.set_border_width(10)
 
-        columnas=["Nombre","Apellido","Teléfono",
-                  "CP","DNI","Direccion",
-                  "Poblacion","Provincia","Deportes",
-                  "Objetivo","Fisio","Trainer",
-                  "Sauna"]
+        columnas = ["Users", "Password"]
 
-        modelo = Gtk.ListStore(str, str, int, int, int, str, str, str, str, str, str, str, str)
+        modelo = Gtk.ListStore(str, str)
 
-        base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/gym.db")
+        base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/user.db")
         cursor = base.cursor()
-        cursor.execute("SELECT * FROM clientes")
+        cursor.execute("SELECT * FROM gym")
 
         for i in cursor:
             modelo.append(i)
@@ -31,7 +28,6 @@ class DataBaseRecep(Gtk.Window):
         for i in range(len(columnas)):
             celda = Gtk.CellRendererText()
             celda.set_property("editable", True)
-            celda.connect("edited", self.on_edit, modelo, i)
             columna = Gtk.TreeViewColumn(columnas[i], celda, text=i)
 
             vista.append_column(columna)
@@ -49,16 +45,9 @@ class DataBaseRecep(Gtk.Window):
         self.show_all()
 
     def on_btn_return(self, boton):
-        Base_Datos.form.FormularioGym()
+        paquete.formAdmin.FormularioGym()
         self.destroy()
 
-    def on_edit(self, celda, fila, textoCelda, columnas, col, colName):
-        actualiza = formAdmin.FormularioGym()
-        actualiza.updateClientes(colName,textoCelda,columnas[fila][4])
-        columnas[fila][col] = textoCelda
-
-
-
 if __name__ == "__main__":
-    DataBaseRecep()
+    DataBase()
     Gtk.main()

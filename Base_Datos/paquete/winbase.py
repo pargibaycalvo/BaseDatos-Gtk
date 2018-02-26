@@ -1,24 +1,28 @@
-import gi
 import sqlite3 as dbapi
-import Base_Datos.formAdmin
-from Base_Datos import formAdmin
+
+import paquete.formtrainer
+import gi
 
 gi.require_version('Gtk','3.0')
 from gi.repository import Gtk
 
-class DataBase(Gtk.Window):
+class DataBaseRecep(Gtk.Window):
     def __init__(self):
-        Gtk.Window.__init__(self,title="Base de Datos Administradores-GYM")
-        self.set_default_size(400,150)
+        Gtk.Window.__init__(self,title="Base de Datos Clientes-GYM")
+        self.set_default_size(250,150)
         self.set_border_width(10)
 
-        columnas = ["Users", "Password"]
+        columnas=["Nombre","Apellido","Teléfono",
+                  "CP","DNI","Direccion",
+                  "Poblacion","Provincia","Deportes",
+                  "Objetivo","Fisio","Trainer",
+                  "Sauna"]
 
-        modelo = Gtk.ListStore(str, str)
+        modelo = Gtk.ListStore(str, str, int, int, int, str, str, str, str, str, str, str, str)
 
-        base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/user.db")
+        base = dbapi.connect("/home/pedro/Documentos/PycharmProjects/Base_Datos/gym.db")
         cursor = base.cursor()
-        cursor.execute("SELECT * FROM gym")
+        cursor.execute("SELECT * FROM clientes")
 
         for i in cursor:
             modelo.append(i)
@@ -26,7 +30,7 @@ class DataBase(Gtk.Window):
         vista = Gtk.TreeView(model=modelo)
         for i in range(len(columnas)):
             celda = Gtk.CellRendererText()
-            celda.set_property("editable", True)
+            celda.set_property("editable", False)
             columna = Gtk.TreeViewColumn(columnas[i], celda, text=i)
 
             vista.append_column(columna)
@@ -44,10 +48,9 @@ class DataBase(Gtk.Window):
         self.show_all()
 
     def on_btn_return(self, boton):
-        Base_Datos.formAdmin.FormularioGym()
+        paquete.form.FormularioGym()
         self.destroy()
 
-
 if __name__ == "__main__":
-    DataBase()
+    DataBaseRecep()
     Gtk.main()

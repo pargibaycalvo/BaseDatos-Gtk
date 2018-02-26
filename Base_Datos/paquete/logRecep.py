@@ -1,8 +1,10 @@
-import gi
-import Base_Datos.form
-import Base_Datos.formtrainer
 import sqlite3 as dbapi
 
+import paquete.form
+import paquete.inicio
+import gi
+
+from paquete import inicio
 
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
@@ -57,13 +59,13 @@ class VentanaLogin(Gtk.Window):
 
         if (cursor.fetchone()is not None):
             self.lblCorInc.set_text(str("Login Correcto"))
-            Base_Datos.form.FormularioGym()
+            paquete.form.FormularioGym()
             self.destroy()
         else:
             self.lblCorInc.set_text(str("Credenciales incorrectas"))
 
     def on_btn_Return(self, boton):
-        Base_Datos.inicio.VentanaInicio()
+        inicio.VentanaInicio()
         self.destroy()
 
 
